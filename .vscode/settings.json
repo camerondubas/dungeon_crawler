@@ -1,4 +1,5 @@
 {
   "editor.formatOnSave": true,
-  "editor.defaultFormatter": "matklad.rust-analyzer"
+  "editor.defaultFormatter": "matklad.rust-analyzer",
+  "rust-analyzer.inlayHints.enable": true
 }
