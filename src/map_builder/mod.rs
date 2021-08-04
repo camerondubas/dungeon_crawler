@@ -5,7 +5,7 @@ mod rooms;
 use crate::prelude::*;
 // use empty::EmptyArchitect;
 use automata::CellularAutomataArchitect;
-use rooms::RoomsArchitect;
+// use rooms::RoomsArchitect;
 
 pub trait MapArchitect {
     fn new(&mut self, rng: &mut RandomNumberGenerator) -> MapBuilder;
@@ -146,7 +146,7 @@ impl MapBuilder {
         let mut spawns = Vec::new();
         for _ in 0..NUM_MONSTERS {
             let target_index = rng.random_slice_index(&spawnable_tiles).unwrap();
-            spawns.push(spawnable_tiles[target_index]).clone();
+            spawns.push(spawnable_tiles[target_index].clone());
             spawnable_tiles.remove(target_index);
         }
 
