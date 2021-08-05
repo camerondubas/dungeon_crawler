@@ -24,6 +24,10 @@ impl Map {
         point.x >= 0 && point.x < SCREEN_WIDTH && point.y >= 0 && point.y < SCREEN_HEIGHT
     }
 
+    pub fn center(&self) -> Point {
+        Point::new(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2)
+    }
+
     pub fn can_enter_tile(&self, point: Point) -> bool {
         self.in_bounds(point) && self.tiles[map_idx(point.x, point.y)] == TileType::Floor
     }

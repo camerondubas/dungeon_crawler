@@ -1,5 +1,3 @@
-use std::vec;
-
 use crate::prelude::*;
 
 #[system]
@@ -14,12 +12,10 @@ pub fn chasing(#[resource] map: &Map, ecs: &SubWorld, commands: &mut CommandBuff
     let mut player = <(&Point, &Player)>::query();
     let player_pos = player.iter(ecs).next().unwrap().0;
     let player_idx = map_idx(player_pos.x, player_pos.y);
-
-    let search_targets = vec![player_idx];
-    let dijkstra_map = DijkstraMap::new(SCREEN_WIDTH, SCREEN_HEIGHT, &search_targets, map, 1024.0);
+    let dijkstra_map = build_dijkstra(&[player_idx], map);
 
     movers.iter(ecs).for_each(|(entity, pos, _, fov)| {
-        if !fov.visible_tiles.contains(&player_pos) {
+        if !fov.visible_tiles.contains(player_pos) {
             return;
         }
 

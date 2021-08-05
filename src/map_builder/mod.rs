@@ -11,6 +11,7 @@ use empty::EmptyArchitect;
 use prefab::apply_prefab;
 use rooms::RoomsArchitect;
 
+#[allow(clippy::new_ret_no_self)]
 pub trait MapArchitect {
     fn new(&mut self, rng: &mut RandomNumberGenerator) -> MapBuilder;
 }
@@ -54,15 +55,11 @@ impl MapBuilder {
     }
 
     fn find_most_distant(&self) -> Point {
-        let dijkstra_map = DijkstraMap::new(
-            SCREEN_WIDTH,
-            SCREEN_HEIGHT,
-            &vec![self.map.point2d_to_index(self.player_start)],
-            &self.map,
-            1024.0,
-        );
-
         const UNREACHABLE: &f32 = &f32::MAX;
+
+        let dijkstra_map =
+            build_dijkstra(&[self.map.point2d_to_index(self.player_start)], &self.map);
+
         self.map.index_to_point2d(
             dijkstra_map
                 .map
@@ -77,7 +74,7 @@ impl MapBuilder {
 
     fn build_random_rooms(&mut self, rng: &mut RandomNumberGenerator) {
         while self.rooms.len() < NUM_ROOMS {
-            let room = Rect::with_size(
+            let new_room = Rect::with_size(
                 rng.range(1, SCREEN_WIDTH - 10),
                 rng.range(1, SCREEN_HEIGHT - 10),
                 rng.range(2, 10),
@@ -85,27 +82,32 @@ impl MapBuilder {
             );
 
             let mut overlap = false;
-            for r in self.rooms.iter() {
-                if r.intersect(&room) {
+            for room in self.rooms.iter() {
+                if room.intersect(&new_room) {
                     overlap = true;
                 }
             }
 
             if !overlap {
-                room.for_each(|p| {
-                    if p.x > 0 && p.x < SCREEN_WIDTH && p.y > 0 && p.y < SCREEN_HEIGHT {
-                        let idx = map_idx(p.x, p.y);
+                new_room.for_each(|point| {
+                    if point.x > 0
+                        && point.x < SCREEN_WIDTH
+                        && point.y > 0
+                        && point.y < SCREEN_HEIGHT
+                    {
+                        let idx = map_idx(point.x, point.y);
                         self.map.tiles[idx] = TileType::Floor;
                     }
                 });
 
-                self.rooms.push(room);
+                self.rooms.push(new_room);
             }
         }
     }
 
     fn apply_vertical_tunnel(&mut self, y1: i32, y2: i32, x: i32) {
         use std::cmp::{max, min};
+
         for y in min(y1, y2)..=max(y1, y2) {
             if let Some(idx) = self.map.try_idx(Point::new(x, y)) {
                 self.map.tiles[idx as usize] = TileType::Floor;
@@ -115,6 +117,7 @@ impl MapBuilder {
 
     fn apply_horizontal_tunnel(&mut self, x1: i32, x2: i32, y: i32) {
         use std::cmp::{max, min};
+
         for x in min(x1, x2)..=max(x1, x2) {
             if let Some(idx) = self.map.try_idx(Point::new(x, y)) {
                 self.map.tiles[idx as usize] = TileType::Floor;
@@ -124,10 +127,11 @@ impl MapBuilder {
 
     fn build_corridors(&mut self, rng: &mut RandomNumberGenerator) {
         let mut rooms = self.rooms.clone();
+
         rooms.sort_by(|a, b| a.center().x.cmp(&b.center().x));
 
-        for (i, room) in rooms.iter().enumerate().skip(1) {
-            let prev = rooms[i - 1].center();
+        for (idx, room) in rooms.iter().enumerate().skip(1) {
+            let prev = rooms[idx - 1].center();
             let new = room.center();
 
             if rng.range(0, 2) == 1 {
@@ -147,8 +151,8 @@ impl MapBuilder {
             .tiles
             .iter()
             .enumerate()
-            .filter(|(idx, t)| {
-                **t == TileType::Floor
+            .filter(|(idx, tile)| {
+                **tile == TileType::Floor
                     && DistanceAlg::Pythagoras.distance2d(*start, self.map.index_to_point2d(*idx))
                         > 10.0
             })
@@ -158,7 +162,7 @@ impl MapBuilder {
         let mut spawns = Vec::new();
         for _ in 0..NUM_MONSTERS {
             let target_index = rng.random_slice_index(&spawnable_tiles).unwrap();
-            spawns.push(spawnable_tiles[target_index].clone());
+            spawns.push(spawnable_tiles[target_index]);
             spawnable_tiles.remove(target_index);
         }
 

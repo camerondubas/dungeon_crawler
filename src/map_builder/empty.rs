@@ -8,7 +8,7 @@ impl MapArchitect for EmptyArchitect {
         let mut mb = MapBuilder::empty();
 
         mb.fill(TileType::Floor);
-        mb.player_start = Point::new(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2);
+        mb.player_start = mb.map.center();
         mb.amulet_start = mb.find_most_distant();
 
         for _ in 0..50 {
