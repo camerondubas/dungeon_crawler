@@ -20,6 +20,7 @@ mod prelude {
     pub const NUM_TILES: usize = (SCREEN_WIDTH * SCREEN_HEIGHT) as usize;
     pub const TILE_WIDTH: i32 = 32;
     pub const TILE_HEIGHT: i32 = 32;
+    pub const TILESET: &str = "dungeonfont.png";
 
     pub use crate::camera::*;
     pub use crate::components::*;
@@ -59,6 +60,7 @@ impl State {
         resources.insert(map_builder.map);
         resources.insert(Camera::new(map_builder.player_start));
         resources.insert(TurnState::AwaitingInput);
+        resources.insert(map_builder.theme);
 
         Self {
             ecs,
@@ -146,6 +148,7 @@ impl State {
         self.resources.insert(map_builder.map);
         self.resources.insert(Camera::new(map_builder.player_start));
         self.resources.insert(TurnState::AwaitingInput);
+        self.resources.insert(map_builder.theme);
     }
 }
 
@@ -189,10 +192,10 @@ fn main() -> BError {
         .with_dimensions(DISPLAY_WIDTH, DISPLAY_HEIGHT)
         .with_tile_dimensions(TILE_WIDTH, TILE_HEIGHT)
         .with_resource_path("resources/")
-        .with_font("dungeonfont.png", TILE_WIDTH, TILE_HEIGHT)
+        .with_font(TILESET, TILE_WIDTH, TILE_HEIGHT)
         .with_font("terminal8x8.png", 8, 8)
-        .with_simple_console(DISPLAY_WIDTH, DISPLAY_HEIGHT, "dungeonfont.png")
-        .with_simple_console_no_bg(DISPLAY_WIDTH, DISPLAY_HEIGHT, "dungeonfont.png")
+        .with_simple_console(DISPLAY_WIDTH, DISPLAY_HEIGHT, TILESET)
+        .with_simple_console_no_bg(DISPLAY_WIDTH, DISPLAY_HEIGHT, TILESET)
         .with_simple_console_no_bg(SCREEN_WIDTH * 2, SCREEN_HEIGHT * 2, "terminal8x8.png")
         .build()?;
     main_loop(context, State::new())
