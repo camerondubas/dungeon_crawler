@@ -3,6 +3,7 @@ use crate::prelude::*;
 pub struct DungeonTheme {}
 
 impl DungeonTheme {
+    #[allow(clippy::new_ret_no_self)]
     pub fn new() -> Box<dyn MapTheme> {
         Box::new(Self {})
     }
@@ -20,6 +21,7 @@ impl MapTheme for DungeonTheme {
 pub struct ForestTheme {}
 
 impl ForestTheme {
+    #[allow(clippy::new_ret_no_self)]
     pub fn new() -> Box<dyn MapTheme> {
         Box::new(Self {})
     }
