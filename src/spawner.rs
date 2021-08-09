@@ -54,6 +54,40 @@ pub fn spawn_amulet_of_yala(ecs: &mut World, pos: Point) {
     ));
 }
 
+pub fn spawn_healing_potion(ecs: &mut World, pos: Point) {
+    ecs.push((
+        Item,
+        Name("Potion".to_string()),
+        pos,
+        Render {
+            color: ColorPair::new(WHITE, BLACK),
+            glyph: to_cp437('!'),
+        },
+        ProvidesHealing { amount: 10 },
+    ));
+}
+
+pub fn spawn_magic_mapper(ecs: &mut World, pos: Point) {
+    ecs.push((
+        Item,
+        Name("Dungeon Map".to_string()),
+        pos,
+        Render {
+            color: ColorPair::new(WHITE, BLACK),
+            glyph: to_cp437('{'),
+        },
+        ProvidesDungeonMap,
+    ));
+}
+
+pub fn spawn_entity(ecs: &mut World, rng: &mut RandomNumberGenerator, pos: Point) {
+    let roll = rng.roll_dice(1, 6);
+    match roll {
+        1 => spawn_healing_potion(ecs, pos),
+        2 => spawn_magic_mapper(ecs, pos),
+        _ => spawn_monster(ecs, rng, pos),
+    }
+}
 // Chartacters
 fn player() -> (i32, String, FontCharType) {
     (10, "Cameron".to_string(), to_cp437('@'))

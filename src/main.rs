@@ -55,7 +55,7 @@ impl State {
         map_builder
             .monster_spawns
             .iter()
-            .for_each(|pos| spawn_monster(&mut ecs, &mut rng, *pos));
+            .for_each(|pos| spawn_entity(&mut ecs, &mut rng, *pos));
 
         resources.insert(map_builder.map);
         resources.insert(Camera::new(map_builder.player_start));
@@ -143,7 +143,7 @@ impl State {
         map_builder
             .monster_spawns
             .iter()
-            .for_each(|pos| spawn_monster(&mut self.ecs, &mut rng, *pos));
+            .for_each(|pos| spawn_entity(&mut self.ecs, &mut rng, *pos));
 
         self.resources.insert(map_builder.map);
         self.resources.insert(Camera::new(map_builder.player_start));
@@ -154,6 +154,10 @@ impl State {
 
 impl GameState for State {
     fn tick(&mut self, ctx: &mut BTerm) {
+        if let Some(VirtualKeyCode::Escape) = ctx.key {
+            std::process::exit(0)
+        }
+
         ctx.set_active_console(0);
         ctx.cls();
         ctx.set_active_console(1);
