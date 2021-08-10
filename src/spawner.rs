@@ -63,7 +63,7 @@ pub fn spawn_healing_potion(ecs: &mut World, pos: Point) {
             color: ColorPair::new(WHITE, BLACK),
             glyph: to_cp437('!'),
         },
-        ProvidesHealing { amount: 10 },
+        ProvidesHealing { amount: 2 },
     ));
 }
 
