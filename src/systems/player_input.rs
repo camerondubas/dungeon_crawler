@@ -5,6 +5,7 @@ use crate::prelude::*;
 #[read_component(Player)]
 #[read_component(Enemy)]
 #[read_component(Item)]
+#[read_component(Weapon)]
 #[read_component(Carried)]
 #[write_component(Health)]
 pub fn player_input(
@@ -48,6 +49,17 @@ pub fn player_input(
                     .for_each(|(entity, _item, _item_pos)| {
                         commands.remove_component::<Point>(*entity);
                         commands.add_component(*entity, Carried(player));
+
+                        if let Ok(e) = ecs.entry_ref(*entity) {
+                            if e.get_component::<Weapon>().is_ok() {
+                                <(Entity, &Carried, &Weapon)>::query()
+                                    .iter(ecs)
+                                    .filter(|(_entity, carried, _weapon)| carried.0 == player)
+                                    .for_each(|(e, _c, _w)| {
+                                        commands.remove(*e);
+                                    })
+                            }
+                        }
                     });
 
                 Point::new(0, 0)
