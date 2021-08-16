@@ -18,9 +18,9 @@ mod prelude {
     pub const DISPLAY_WIDTH: i32 = SCREEN_WIDTH / 2;
     pub const DISPLAY_HEIGHT: i32 = SCREEN_HEIGHT / 2;
     pub const NUM_TILES: usize = (SCREEN_WIDTH * SCREEN_HEIGHT) as usize;
-    pub const TILE_WIDTH: i32 = 32;
-    pub const TILE_HEIGHT: i32 = 32;
-    pub const TILESET: &str = "dungeonfont.png";
+    pub const TILE_WIDTH: i32 = 16;
+    pub const TILE_HEIGHT: i32 = 16;
+    pub const TILESET: &str = "Sprite-0001.png";
 
     pub use crate::camera::*;
     pub use crate::components::*;
@@ -33,6 +33,12 @@ mod prelude {
 }
 
 use prelude::*;
+
+#[derive(Clone, Copy)]
+pub struct Frame {
+    count: usize,
+    animation_count: usize,
+}
 
 struct State {
     ecs: World,
@@ -60,6 +66,10 @@ impl State {
         resources.insert(Camera::new(map_builder.player_start));
         resources.insert(TurnState::AwaitingInput);
         resources.insert(map_builder.theme);
+        resources.insert(Frame {
+            count: 0,
+            animation_count: 0,
+        });
 
         Self {
             ecs,
@@ -247,7 +257,18 @@ impl GameState for State {
             TurnState::GameOver => self.game_over(ctx),
             TurnState::Victory => self.victory(ctx),
             TurnState::NextLevel => self.advance_level(),
+        };
+
+        let current_frame = *self.resources.get::<Frame>().unwrap();
+        let mut animation_count = current_frame.animation_count;
+        if current_frame.count % 5 == 0 {
+            animation_count += 1;
         }
+
+        self.resources.insert(Frame {
+            count: current_frame.count + 1,
+            animation_count,
+        });
 
         render_draw_buffer(ctx).expect("Render error");
     }
@@ -257,7 +278,7 @@ fn main() -> BError {
     let context = BTermBuilder::new()
         .with_title("Dungeon Crawler")
         .with_fps_cap(30.0)
-        .with_dimensions(DISPLAY_WIDTH, DISPLAY_HEIGHT)
+        .with_dimensions(DISPLAY_WIDTH * 3, DISPLAY_HEIGHT * 3)
         .with_tile_dimensions(TILE_WIDTH, TILE_HEIGHT)
         .with_resource_path("resources/")
         .with_font(TILESET, TILE_WIDTH, TILE_HEIGHT)

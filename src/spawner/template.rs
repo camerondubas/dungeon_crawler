@@ -4,6 +4,7 @@ use ron::de::from_reader;
 use serde::Deserialize;
 use std::collections::HashSet;
 use std::fs::File;
+use std::vec;
 
 #[derive(Clone, Debug, Deserialize)]
 pub struct Template {
@@ -12,6 +13,7 @@ pub struct Template {
     pub frequency: i32,
     pub name: String,
     pub glyph: char,
+    pub glyphs: Option<Vec<char>>,
     pub provides: Option<Vec<(String, i32)>>,
     pub hp: Option<i32>,
     pub base_damage: Option<i32>,
@@ -67,11 +69,22 @@ impl Templates {
         template: &Template,
         commands: &mut legion::systems::CommandBuffer,
     ) {
+        let mut glyphs = None;
+
+        if let Some(template_glyphs) = &template.glyphs {
+            let mut glyph_vec = vec![];
+            template_glyphs
+                .iter()
+                .for_each(|glyph| glyph_vec.push(to_cp437(*glyph)));
+
+            glyphs = Some(glyph_vec);
+        }
         let entity = commands.push((
             point.clone(),
             Render {
                 color: ColorPair::new(WHITE, BLACK),
                 glyph: to_cp437(template.glyph),
+                glyphs,
             },
             Name(template.name.clone()),
         ));

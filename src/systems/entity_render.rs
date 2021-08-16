@@ -1,11 +1,11 @@
-use crate::prelude::*;
+use crate::{prelude::*, Frame};
 
 #[system]
 #[read_component(Point)]
 #[read_component(Render)]
 #[read_component(FieldOfView)]
 #[read_component(Player)]
-pub fn entity_render(ecs: &SubWorld, #[resource] camera: &Camera) {
+pub fn entity_render(ecs: &SubWorld, #[resource] camera: &Camera, #[resource] frame: &Frame) {
     let mut draw_batch = DrawBatch::new();
     draw_batch.target(1);
 
@@ -19,7 +19,12 @@ pub fn entity_render(ecs: &SubWorld, #[resource] camera: &Camera) {
         .iter(ecs)
         .filter(|(pos, _)| player_fov.visible_tiles.contains(pos))
         .for_each(|(point, render)| {
-            draw_batch.set(*point - offset, render.color, render.glyph);
+            if let Some(glyphs) = &render.glyphs {
+                let frame_idx = frame.animation_count % glyphs.len();
+                draw_batch.set(*point - offset, render.color, glyphs[frame_idx]);
+            } else {
+                draw_batch.set(*point - offset, render.color, render.glyph);
+            }
         });
     draw_batch.submit(5000).expect("Batch Error")
 }
