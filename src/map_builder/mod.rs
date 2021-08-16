@@ -48,7 +48,7 @@ impl MapBuilder {
 
         mb.theme = match rng.range(0, 2) {
             0 => DungeonTheme::new(),
-            _ => ForestTheme::new(),
+            _ => DungeonTheme::new(),
         };
 
         mb
