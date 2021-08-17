@@ -19,12 +19,8 @@ pub fn entity_render(ecs: &SubWorld, #[resource] camera: &Camera, #[resource] fr
         .iter(ecs)
         .filter(|(pos, _)| player_fov.visible_tiles.contains(pos))
         .for_each(|(point, render)| {
-            if let Some(glyphs) = &render.glyphs {
-                let frame_idx = frame.animation_count % glyphs.len();
-                draw_batch.set(*point - offset, render.color, glyphs[frame_idx]);
-            } else {
-                draw_batch.set(*point - offset, render.color, render.glyph);
-            }
+            let frame_idx = frame.animation_count % render.glyphs.len();
+            draw_batch.set(*point - offset, render.color, render.glyphs[frame_idx]);
         });
     draw_batch.submit(5000).expect("Batch Error")
 }

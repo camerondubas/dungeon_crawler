@@ -3,7 +3,7 @@ Templates(
     Template(
       entity_type: Item,
       name: "Healing Potion",
-      glyph: '!',
+      glyphs: ['!'],
       levels: [0,1,2],
       provides: Some([("Healing", 3)]),
       frequency: 1,
@@ -11,7 +11,7 @@ Templates(
     Template(
       entity_type: Item,
       name: "Weak Healing Potion",
-      glyph: '!',
+      glyphs: ['!'],
       levels: [0,1,2],
       provides: Some([("Healing", 1)]),
       frequency: 2,
@@ -19,7 +19,7 @@ Templates(
     Template(
       entity_type: Item,
       name: "Dungeon Map",
-      glyph: '{',
+      glyphs: ['{'],
       levels: [0,1,2],
       provides: Some([("MagicMap", 0)]),
       frequency: 1,
@@ -27,28 +27,31 @@ Templates(
     Template(
       entity_type: Item,
       name : "Rusty Sword",
-      glyph: '/',
+      glyphs: ['/'],
       levels: [ 0, 1, 2 ],
       frequency: 1,
       base_damage: Some(1)
     ),
     Template(
       entity_type: Item,
-      name : "Shiny Sword", glyph: 'S', levels: [ 0, 1, 2 ],
+      name : "Shiny Sword",
+      glyphs: ['S'],
+      levels: [ 0, 1, 2 ],
       frequency: 1,
       base_damage: Some(2)
     ),
     Template(
       entity_type: Item,
-      name : "Huge Sword", glyph: '/', levels: [ 1, 2 ],
+      name : "Huge Sword",
+      glyphs: ['/'],
+      levels: [ 1, 2 ],
       frequency: 1,
       base_damage: Some(3)
     ),
     Template(
       entity_type: Enemy,
       name: "Goblin",
-      glyph: 'g',
-      glyphs: Some(['g','h']),
+      glyphs: ['g','h'],
       levels: [0,1,2],
       hp: Some(1),
       frequency: 3,
@@ -57,8 +60,7 @@ Templates(
     Template(
       entity_type: Enemy,
       name: "Orc",
-      glyph: 'o',
-      glyphs:  Some(['n', 'o']),
+      glyphs: ['n', 'o'],
       levels: [0,1,2],
       hp: Some(2),
       base_damage: Some(1), // This cannot be the bottom item in the Template, due to a parsing error in the RON crate
@@ -67,8 +69,7 @@ Templates(
     Template(
       entity_type: Enemy,
       name: "Ogre",
-      glyph: 'O',
-      glyphs:  Some(['N', 'O']),
+      glyphs:  ['N', 'O'],
       levels: [ 1, 2 ],
       hp: Some(5),
       frequency: 1,
@@ -77,7 +78,7 @@ Templates(
     Template(
       entity_type: Enemy,
       name: "Ettin",
-      glyph: 'E',
+      glyphs: ['E', 'F'],
       levels: [ 2 ],
       hp: Some(10),
       frequency: 1,

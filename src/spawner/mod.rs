@@ -19,8 +19,7 @@ pub fn spawn_player(ecs: &mut World, pos: Point) {
         pos,
         Render {
             color: ColorPair::new(WHITE, BLACK),
-            glyph: to_cp437('@'),
-            glyphs: Some(vec![to_cp437('@'), to_cp437('A')]),
+            glyphs: vec![to_cp437('@'), to_cp437('A')],
         },
         Health {
             current: 10,
@@ -38,8 +37,7 @@ pub fn spawn_amulet_of_yala(ecs: &mut World, pos: Point) {
         pos,
         Render {
             color: ColorPair::new(WHITE, BLACK),
-            glyph: to_cp437('|'),
-            glyphs: None,
+            glyphs: vec![to_cp437('|')],
         },
         Name("Amulet of Yala".to_string()),
     ));

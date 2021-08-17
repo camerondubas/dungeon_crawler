@@ -157,6 +157,10 @@ impl State {
         self.resources.insert(Camera::new(map_builder.player_start));
         self.resources.insert(TurnState::AwaitingInput);
         self.resources.insert(map_builder.theme);
+        self.resources.insert(Frame {
+            count: 0,
+            animation_count: 0,
+        });
     }
 
     fn advance_level(&mut self) {
