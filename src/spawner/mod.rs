@@ -19,7 +19,7 @@ pub fn spawn_player(ecs: &mut World, pos: Point) {
         pos,
         Render {
             color: ColorPair::new(WHITE, BLACK),
-            glyphs: vec![to_cp437('@'), to_cp437('A')],
+            glyphs: vec![to_cp437('@')],
         },
         Health {
             current: 10,

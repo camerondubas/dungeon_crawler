@@ -18,9 +18,9 @@ mod prelude {
     pub const DISPLAY_WIDTH: i32 = SCREEN_WIDTH / 2;
     pub const DISPLAY_HEIGHT: i32 = SCREEN_HEIGHT / 2;
     pub const NUM_TILES: usize = (SCREEN_WIDTH * SCREEN_HEIGHT) as usize;
-    pub const TILE_WIDTH: i32 = 16;
-    pub const TILE_HEIGHT: i32 = 16;
-    pub const TILESET: &str = "Sprite-0001.png";
+    pub const TILE_WIDTH: i32 = 32;
+    pub const TILE_HEIGHT: i32 = 32;
+    pub const TILESET: &str = "dungeonfont.png";
 
     pub use crate::camera::*;
     pub use crate::components::*;
@@ -282,7 +282,7 @@ fn main() -> BError {
     let context = BTermBuilder::new()
         .with_title("Dungeon Crawler")
         .with_fps_cap(30.0)
-        .with_dimensions(DISPLAY_WIDTH * 3, DISPLAY_HEIGHT * 3)
+        .with_dimensions(DISPLAY_WIDTH, DISPLAY_HEIGHT)
         .with_tile_dimensions(TILE_WIDTH, TILE_HEIGHT)
         .with_resource_path("resources/")
         .with_font(TILESET, TILE_WIDTH, TILE_HEIGHT)
